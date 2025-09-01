@@ -29,6 +29,10 @@ const Product = () => {
   }
 
   useEffect(()=>{
+    // ensure we start at the top of the page when navigating to a product
+    if (typeof window !== 'undefined') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
     fetchProductData();
 
   }, [productId, products])
