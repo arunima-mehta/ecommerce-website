@@ -57,7 +57,7 @@ export default function About() {
   ];
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black w-full">
+    <div className="min-h-screen w-full">
       {/* Values */}
       <section className="py-20 px-4 max-w-7xl mx-auto">
         <motion.div

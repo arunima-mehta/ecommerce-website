@@ -21,26 +21,28 @@ import { ThemeProvider } from './components/theme-provider'
 const App = () => {
   return (
     <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
-      <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
-        <ShopContextProvider>
-          <ToastContainer/>
-          <Navbar/>
-          <SearchBar />
-          <Routes>
-            <Route path='/' element={<Home/>} />
-            <Route path='/collection' element={<Collection/>} />
-            <Route path='/about' element={<About/>} />
-            <Route path='/contact' element={<Contact/>} />
-            <Route path='/product/:productId' element={<Product/>} />
-            <Route path='/cart' element={<Cart/>} />
-            <Route path='/login' element={<Login/>} />
-            <Route path='/place-order' element={<PlaceOrder/>} />
-            <Route path='/orders' element={<Orders/>} />
-            <Route path='/verify' element={<Verify/>} />
-            <Route path="/wishlist" element={<Wishlist />} />
-          </Routes>
-          <Footer/>
-        </ShopContextProvider>
+      <div className='min-h-screen bg-white dark:bg-gray-950'>
+        <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
+          <ShopContextProvider>
+            <ToastContainer/>
+            <Navbar/>
+            <SearchBar />
+            <Routes>
+              <Route path='/' element={<Home/>} />
+              <Route path='/collection' element={<Collection/>} />
+              <Route path='/about' element={<About/>} />
+              <Route path='/contact' element={<Contact/>} />
+              <Route path='/product/:productId' element={<Product/>} />
+              <Route path='/cart' element={<Cart/>} />
+              <Route path='/login' element={<Login/>} />
+              <Route path='/place-order' element={<PlaceOrder/>} />
+              <Route path='/orders' element={<Orders/>} />
+              <Route path='/verify' element={<Verify/>} />
+              <Route path="/wishlist" element={<Wishlist />} />
+            </Routes>
+          </ShopContextProvider>
+        </div>
+        <Footer/>
       </div>
     </ThemeProvider>
   )

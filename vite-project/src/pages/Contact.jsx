@@ -25,8 +25,8 @@ export default function Contact() {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-black">
-      <div className="max-w-7xl mx-auto px-4 py-12">
+    <div className="min-h-screen">
+      <div className="max-w-7xl mx-auto py-12">
         <div className="text-center max-w-3xl mx-auto mb-12">
           <h1 className="text-5xl font-medium mb-4 text-gray-900 dark:text-white">GET IN TOUCH</h1>
           <p className="text-lg text-gray-600 dark:text-gray-300">
@@ -39,7 +39,7 @@ export default function Contact() {
             className={`px-12 py-4 text-sm font-medium ${
               activeTab === 'contact'
               ? 'bg-gray-900 text-white dark:bg-white dark:text-black shadow'
-              : 'border border-gray-300 text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600'
+              : 'border border-gray-300 text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600'
             } rounded-full transition-all duration-200 ease-in-out min-w-[160px]`}
           >
             CONTACT US
@@ -49,7 +49,7 @@ export default function Contact() {
             className={`px-12 py-4 text-sm font-medium ${
               activeTab === 'careers'
               ? 'bg-gray-900 text-white dark:bg-white dark:text-black shadow'
-              : 'border border-gray-300 text-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600'
+              : 'border border-gray-300 text-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:border-gray-600'
             } rounded-full transition-all duration-200 ease-in-out min-w-[160px]`}
           >
             CAREERS
@@ -68,7 +68,7 @@ export default function Contact() {
 
                 <div className="space-y-8">
                   <div className="relative group">
-                    <div className="bg-white dark:bg-black p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 group-hover:shadow-lg transition-all duration-300 group-hover:border-transparent transform group-hover:-translate-y-1">
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 group-hover:shadow-lg transition-all duration-300 group-hover:border-transparent transform group-hover:-translate-y-1">
                       <div className="flex items-start gap-4">
                         <div className="p-3 bg-gray-900 dark:bg-white rounded-full">
                           <svg className="w-6 h-6 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -90,7 +90,7 @@ export default function Contact() {
                   </div>
 
                   <div className="relative group">
-                    <div className="bg-white dark:bg-black p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 group-hover:shadow-lg transition-all duration-300 group-hover:border-transparent transform group-hover:-translate-y-1">
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 group-hover:shadow-lg transition-all duration-300 group-hover:border-transparent transform group-hover:-translate-y-1">
                       <div className="flex items-start gap-4">
                         <div className="p-3 bg-gray-900 dark:bg-white rounded-full">
                           <svg className="w-6 h-6 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -111,7 +111,7 @@ export default function Contact() {
                   </div>
 
                   <div className="relative group">
-                    <div className="bg-white dark:bg-black p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-800 group-hover:shadow-lg transition-all duration-300 group-hover:border-transparent transform group-hover:-translate-y-1">
+                    <div className="bg-white dark:bg-gray-900 p-6 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 group-hover:shadow-lg transition-all duration-300 group-hover:border-transparent transform group-hover:-translate-y-1">
                       <div className="flex items-start gap-4">
                         <div className="p-3 bg-gray-900 dark:bg-white rounded-full">
                           <svg className="w-6 h-6 text-white dark:text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -134,7 +134,7 @@ export default function Contact() {
               </div>
 
               {/* Right Column - Contact Form */}
-              <div className="bg-white dark:bg-black p-8 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-800">
+              <div className="bg-white dark:bg-gray-900 p-8 rounded-2xl shadow-sm border border-gray-200 dark:border-gray-700">
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
@@ -144,7 +144,7 @@ export default function Contact() {
                         name="firstName"
                         value={formData.firstName}
                         onChange={handleChange}
-                        className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                        className="w-full p-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                       />
                     </div>
                     <div>
@@ -154,7 +154,7 @@ export default function Contact() {
                         name="lastName"
                         value={formData.lastName}
                         onChange={handleChange}
-                        className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                        className="w-full p-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                       />
                     </div>
                   </div>
@@ -165,7 +165,7 @@ export default function Contact() {
                       name="email"
                       value={formData.email}
                       onChange={handleChange}
-                      className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                      className="w-full p-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     />
                   </div>
                   <div>
@@ -175,7 +175,7 @@ export default function Contact() {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
-                      className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                      className="w-full p-3 border border-gray-200 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     />
                   </div>
                   <div>
@@ -185,7 +185,7 @@ export default function Contact() {
                       name="message"
                       value={formData.message}
                       onChange={handleChange}
-                      className="w-full p-3 border border-gray-200 dark:border-gray-700 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
+                      className="w-full p-3 border border-gray-200 dark:border-gray-600 rounded-lg resize-none focus:outline-none focus:ring-2 focus:ring-black dark:focus:ring-white bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
                     ></textarea>
                   </div>
                   <button 
