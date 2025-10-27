@@ -20,6 +20,7 @@ export class RecommendationEngine {
             subCategories: new Map(),
             priceRanges: new Map(),
             brands: new Map(),
+            tags: new Map(),
             interactedProducts: new Set()
         };
 
@@ -47,6 +48,14 @@ export class RecommendationEngine {
                 if (product.brand) {
                     const brandCount = preferences.brands.get(product.brand) || 0;
                     preferences.brands.set(product.brand, brandCount + weight);
+                }
+
+                // Track tag preferences
+                if (product.tags) {
+                    product.tags.forEach(tag => {
+                        const tagCount = preferences.tags.get(tag) || 0;
+                        preferences.tags.set(tag, tagCount + weight);
+                    });
                 }
             });
         };
