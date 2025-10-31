@@ -1,0 +1,226 @@
+import React, { useContext, useEffect, useState } from 'react';
+import { ShopContext } from '../context/ShopContext';
+import Title from '../components/Title';
+import ProductItem from '../components/ProductItem';
+import { Icon } from '@iconify/react';
+import axios from 'axios';
+
+const ForYou = () => {
+    const { 
+        products, 
+        cartItems, 
+        wishlistItems, 
+        token,
+        navigate,
+        currency,
+        backendUrl
+    } = useContext(ShopContext);
+
+    const [recommendedProducts, setRecommendedProducts] = useState([]);
+    const [userActivityProducts, setUserActivityProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [userActivityData, setUserActivityData] = useState({
+        cartItems: {},
+        wishlistItems: {},
+        orders: []
+    });
+
+    // Fetch user activity data from database
+    const fetchUserActivityData = async () => {
+        if (!token) {
+            setUserActivityData({
+                cartItems: {},
+                wishlistItems: {},
+                orders: []
+            });
+            return;
+        }
+
+        try {
+            console.log('Fetching user activity data...');
+            const response = await axios.post(backendUrl + '/api/user/activity', {}, {
+                headers: { token }
+            });
+
+            if (response.data.success) {
+                console.log('Activity data received:', response.data.activityData);
+                setUserActivityData(response.data.activityData);
+            }
+        } catch (error) {
+            console.error('Error fetching user activity:', error);
+            setUserActivityData({
+                cartItems: cartItems || {},
+                wishlistItems: wishlistItems || {},
+                orders: []
+            });
+        }
+    };
+
+    // Update activity products and get recommendations
+    const updateActivityAndRecommendations = () => {
+        if (!token || !products.length) {
+            setUserActivityProducts([]);
+            setRecommendedProducts([]);
+            setLoading(false);
+            return;
+        }
+
+        // Get all product IDs from user's activity
+        const cartProductIds = Object.keys(userActivityData.cartItems);
+        const wishlistProductIds = Object.keys(userActivityData.wishlistItems);
+        const orderProductIds = userActivityData.orders.flatMap(order => 
+            order.items ? order.items.map(item => item._id) : []
+        );
+
+        // Get all unique product IDs
+        const allActivityIds = new Set([...cartProductIds, ...wishlistProductIds, ...orderProductIds]);
+
+        // Get activity products
+        const activityProducts = products.filter(product => allActivityIds.has(product._id));
+        setUserActivityProducts(activityProducts);
+
+        // Generate recommendations based on user's activity
+        if (activityProducts.length > 0) {
+            const userCategories = new Set();
+            const userSubCategories = new Set();
+            
+            activityProducts.forEach(product => {
+                if (product.category) userCategories.add(product.category);
+                if (product.subCategory) userSubCategories.add(product.subCategory);
+            });
+
+            // Find similar products based on categories and subcategories
+            const recommendations = products.filter(product => {
+                // Exclude products that are already in user's activity
+                if (allActivityIds.has(product._id)) return false;
+
+                // Include products that match category or subcategory
+                return userCategories.has(product.category) || 
+                       userSubCategories.has(product.subCategory);
+            });
+
+            // Shuffle and limit recommendations
+            const shuffledRecommendations = recommendations
+                .sort(() => Math.random() - 0.5)
+                .slice(0, 8);
+
+            setRecommendedProducts(shuffledRecommendations);
+        } else {
+            setRecommendedProducts([]);
+        }
+
+        setLoading(false);
+    };
+
+    useEffect(() => {
+        if (token) {
+            fetchUserActivityData();
+        }
+    }, [token]);
+
+    useEffect(() => {
+        updateActivityAndRecommendations();
+    }, [products, userActivityData]);
+
+    // Get status icons for a product
+    const getProductStatus = (productId) => {
+        return {
+            inCart: Object.keys(userActivityData.cartItems).includes(productId),
+            inWishlist: Object.keys(userActivityData.wishlistItems).includes(productId),
+            ordered: userActivityData.orders.some(order => 
+                order.items && order.items.some(item => item._id === productId)
+            )
+        };
+    };
+
+    return (
+        <div className="px-5 md:px-20">
+            <Title title="For You" />
+            {!token ? (
+                <div className="text-center py-10">
+                    <p>Log in to see your personalized recommendations!</p>
+                </div>
+            ) : loading ? (
+                <div className="text-center py-10">
+                    <p>Loading your recommendations...</p>
+                </div>
+            ) : (
+                <div className="space-y-12">
+                    {userActivityProducts.length > 0 && (
+                        <section>
+                            <h2 className="text-xl font-semibold mb-4">Your Activity</h2>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {userActivityProducts.map(product => (
+                                    <div key={product._id} className="relative">
+                                        <ProductItem product={product} />
+                                        <div className="absolute top-2 right-2 flex gap-2">
+                                            {getProductStatus(product._id).inWishlist && (
+                                                <div className="bg-red-500 text-white p-1.5 rounded-full">
+                                                    <Icon icon="mdi:heart" className="w-4 h-4" />
+                                                </div>
+                                            )}
+                                            {getProductStatus(product._id).inCart && (
+                                                <div className="bg-blue-500 text-white p-1.5 rounded-full">
+                                                    <Icon icon="mdi:cart" className="w-4 h-4" />
+                                                </div>
+                                            )}
+                                            {getProductStatus(product._id).ordered && (
+                                                <div className="bg-green-500 text-white p-1.5 rounded-full">
+                                                    <Icon icon="mdi:check" className="w-4 h-4" />
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                            <div className="flex justify-end gap-4 mt-2 text-sm text-gray-600">
+                                <div className="flex items-center gap-1">
+                                    <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                                    <span>In Wishlist</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                                    <span>In Cart</span>
+                                </div>
+                                <div className="flex items-center gap-1">
+                                    <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                                    <span>Ordered</span>
+                                </div>
+                            </div>
+                        </section>
+                    )}
+
+                    {recommendedProducts.length > 0 && (
+                        <section>
+                            <h2 className="text-xl font-semibold mb-4">Recommended For You</h2>
+                            <p className="text-sm text-gray-600 mb-4">
+                                Based on your activity and interests
+                            </p>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {recommendedProducts.map(product => (
+                                    <ProductItem key={product._id} product={product} />
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {userActivityProducts.length === 0 && (
+                        <div className="text-center py-10">
+                            <p className="text-gray-600">
+                                Start exploring our products to get personalized recommendations!
+                            </p>
+                            <button 
+                                onClick={() => navigate('/collection')}
+                                className="mt-4 bg-black text-white px-6 py-2 rounded-lg hover:bg-gray-800"
+                            >
+                                Browse Collections
+                            </button>
+                        </div>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+};
+
+export default ForYou;

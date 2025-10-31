@@ -172,18 +172,45 @@ const ShopContextProvider = (props) => {
 
     // Get user profile to get email for user-specific wishlist storage
     const getUserProfile = async (token) => {
+        if (!token) {
+            console.log('No token available for getUserProfile');
+            return;
+        }
+
         try {
-            const response = await axios.post(backendUrl + '/api/user/profile', {}, {headers:{token}})
-            if (response.data.success) {
+            console.log('Fetching user profile...');
+            const response = await axios.post(
+                `${backendUrl}/api/user/profile`, 
+                {}, 
+                {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'token': token
+                    }
+                }
+            );
+            
+            if (response.data.success && response.data.userData) {
+                console.log('User profile fetched successfully');
                 setUserEmail(response.data.userData.email);
                 // Load user wishlist from database
                 getUserWishlist(token);
+            } else {
+                console.error('User profile fetch failed:', response.data);
+                if (!response.data.success) {
+                    throw new Error(response.data.message || 'Failed to fetch user profile');
+                }
             }
         } 
         catch (error) {
-            console.log(error);
-            // If we can't get user profile, still try to load wishlist
-            getUserWishlist(token);
+            console.error('Error fetching user profile:', error.response?.data || error.message);
+            if (error.response?.status === 401) {
+                console.log('Token invalid, logging out user');
+                logout();
+            } else {
+                // Only try to get wishlist if it's not an auth error
+                getUserWishlist(token);
+            }
         }
     }
 
@@ -262,9 +289,23 @@ const ShopContextProvider = (props) => {
         }
         
         try {
-            console.log('Adding to wishlist:', { itemId, token: token ? 'present' : 'missing' });
-            const response = await axios.post(backendUrl + '/api/wishlist/add', {itemId}, {headers:{token}});
+            // Debug logs
+            console.log('Token status:', !!token);
+            console.log('Adding to wishlist:', { itemId, tokenPresent: !!token });
+
+            const response = await axios.post(
+                `${backendUrl}/api/wishlist/add`, 
+                { itemId },
+                { 
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'token': token
+                    }
+                }
+            );
+
             console.log('Wishlist add response:', response.data);
+            
             if (response.data.success) {
                 // Update local state
                 setWishlistItems((prev) => ({
@@ -272,12 +313,21 @@ const ShopContextProvider = (props) => {
                     [itemId]: true
                 }));
                 toast.success('Added to wishlist!');
+                
+                // Refresh wishlist data
+                getUserWishlist(token);
             } else {
-                toast.error(response.data.message);
+                console.error('Wishlist add failed:', response.data.message);
+                toast.error(response.data.message || 'Failed to add to wishlist');
             }
         } catch (error) {
-            console.log('Wishlist add error:', error);
-            toast.error('Failed to add to wishlist');
+            console.error('Wishlist add error:', error.response?.data || error.message);
+            if (error.response?.status === 401) {
+                toast.error('Please log in again');
+                logout(); // Force logout if token is invalid
+            } else {
+                toast.error(error.response?.data?.message || 'Failed to add to wishlist');
+            }
         }
     };
 

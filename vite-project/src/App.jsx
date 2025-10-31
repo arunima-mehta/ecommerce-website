@@ -20,6 +20,7 @@ import Verify from './pages/Verify'
 import Wishlist from './pages/Wishlist'
 import ShopContextProvider from './context/ShopContext' // Changed from import { ShopContext }
 import { ThemeProvider } from './components/theme-provider'
+import ChatWidget from './components/ChatWidget/ChatWidget'
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
         <div className='px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'>
           <ShopContextProvider>
             <ToastContainer/>
+            <ChatWidget />
             <Navbar/>
             <SearchBar />
             <div className="route-wrapper">

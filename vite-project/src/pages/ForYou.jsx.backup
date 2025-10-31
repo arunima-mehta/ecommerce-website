@@ -1,0 +1,122 @@
+import React, { useContext, useEffect, useState } from 'react'
+import { ShopContext } from '../context/ShopContext'
+import Title from '../components/Title'
+import ProductItem from '../components/ProductItem'
+import RecommendationEngine from '../utils/recommendationEngine'
+import axios from 'axios'
+
+const ForYou = () => {
+    const { 
+        products, 
+        cartItems, 
+        wishlistItems, 
+        token,
+        navigate,
+        currency,
+        backendUrl
+    } = useContext(ShopContext);
+
+    const [personalizedProducts, setPersonalizedProducts] = useState([]);
+    const [revisitFavorites, setRevisitFavorites] = useState([]);
+    const [userActivityProducts, setUserActivityProducts] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [userActivityData, setUserActivityData] = useState({
+        cartItems: {},
+        wishlistItems: {},
+        orders: []
+    });
+
+    // Fetch user activity data from database
+    const fetchUserActivityData = async () => {
+        if (!token) {
+            setUserActivityData({
+                cartItems: {},
+                wishlistItems: {},
+                orders: []
+            });
+            return;
+        }
+
+        try {
+            const response = await axios.post(backendUrl + '/api/user/activity', {}, {
+                headers: { token }
+            });
+
+            if (response.data.success) {
+                setUserActivityData(response.data.activityData);
+            }
+        } catch (error) {
+            console.log('Error fetching user activity:', error);
+            // Fallback to current context data
+            setUserActivityData({
+                cartItems: cartItems || {},
+                wishlistItems: wishlistItems || {},
+                orders: []
+            });
+        }
+    };
+
+    useEffect(() => {
+        if (products.length > 0) {
+            generateRecommendations();
+        }
+    }, [products, userActivityData]);
+
+    useEffect(() => {
+        if (token) {
+            fetchUserActivityData();
+        }
+    }, [token]);
+
+    return (
+        <div className="px-5 md:px-20">
+            <Title title="For You" />
+            {!token ? (
+                <div className="text-center py-10">
+                    <p>Log in to get personalized recommendations!</p>
+                </div>
+            ) : loading ? (
+                <div className="text-center py-10">
+                    <p>Loading your recommendations...</p>
+                </div>
+            ) : (
+                <div className="space-y-8">
+                    {personalizedProducts.length > 0 && (
+                        <section>
+                            <h2 className="text-xl font-semibold mb-4">Recommended For You</h2>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {personalizedProducts.map(product => (
+                                    <ProductItem key={product._id} product={product} />
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {revisitFavorites.length > 0 && (
+                        <section>
+                            <h2 className="text-xl font-semibold mb-4">Your Favorites</h2>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {revisitFavorites.map(product => (
+                                    <ProductItem key={product._id} product={product} />
+                                ))}
+                            </div>
+                        </section>
+                    )}
+
+                    {userActivityProducts.length > 0 && (
+                        <section>
+                            <h2 className="text-xl font-semibold mb-4">Your Activity</h2>
+                            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                {userActivityProducts.map(product => (
+                                    <ProductItem key={product._id} product={product} />
+                                ))}
+                            </div>
+                        </section>
+                    )}
+                </div>
+            )}
+        </div>
+    );
+}
+
+export default ForYou;

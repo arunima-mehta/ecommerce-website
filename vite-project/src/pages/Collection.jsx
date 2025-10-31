@@ -3,6 +3,8 @@ import { ShopContext } from '../context/ShopContext';
 import { assets } from '../assets/assets/frontend_assets/assets';
 import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
+import { useNavigate } from 'react-router-dom';
+import Discover from '../components/Discover';
 
 const Collection = () => {
   const { products, search, showSearch } = useContext(ShopContext);
@@ -10,7 +12,9 @@ const Collection = () => {
   const [filterProducts, setFilterProducts] = useState([]);
   const [category, setCategory] = useState([]);
   const [subCategory, setSubCategory] = useState([]);
-  const [sortType,setSortType] = useState('relevant')
+  const [sortType, setSortType] = useState('relevant');
+  const [showDiscover, setShowDiscover] = useState(false);
+  const navigate = useNavigate();
 
   const toggleCategory = (e) => {
 
@@ -144,8 +148,21 @@ const sortProduct = () => {
 
       {/* Products Grid */}
       <div className='flex-1'>
-        <div className='flex justify-between text-base sm:text-2xl mb-4'>
-          <Title text1="All " text2="Collections" />
+          <>
+            {/* Customized Collections Block */}
+            <div className="mb-8 p-6 bg-gradient-to-r from-purple-100 to-pink-100 rounded-lg shadow-lg hover:shadow-xl transition-all">
+              <h2 className="text-2xl font-bold mb-3 text-gray-800">CUSTOMIZED COLLECTIONS</h2>
+              <p className="text-gray-600 mb-4">Discover products tailored to your taste. Swipe right to like, left to skip!</p>
+              <button 
+                onClick={() => navigate('/discover')} 
+                className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors"
+              >
+                Start Discovering
+              </button>
+            </div>
+
+            <div className='flex justify-between text-base sm:text-2xl mb-4'>
+              <Title text1="All " text2="Collections" />
           
           {/* Sorting */}
           <select onChange={(e)=>setSortType(e.target.value)} className='border-2 border-gray-300 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-200 text-sm px-2'>
@@ -169,6 +186,7 @@ const sortProduct = () => {
             ))
           }
         </div>
+          </>
       </div>
     </div>
   );

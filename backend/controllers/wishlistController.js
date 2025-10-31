@@ -3,10 +3,11 @@ import userModel from "../models/userModel.js"
 // Add product to user wishlist
 const addToWishlist = async (req, res) => {
     try {
-        const { userId, itemId } = req.body
+        const userId = req.userId; // Get userId from auth middleware
+        const { itemId } = req.body;
         console.log('Wishlist add request:', { userId, itemId });
 
-        const userData = await userModel.findById(userId)
+        const userData = await userModel.findById(userId);
         if (!userData) {
             console.log('User not found:', userId);
             return res.json({success: false, message: "User not found"});
@@ -36,9 +37,10 @@ const addToWishlist = async (req, res) => {
 // Remove product from user wishlist
 const removeFromWishlist = async (req, res) => {
     try {
-        const { userId, itemId } = req.body
+        const userId = req.userId; // Get userId from auth middleware
+        const { itemId } = req.body;
 
-        const userData = await userModel.findById(userId)
+        const userData = await userModel.findById(userId);
         let wishlistData = userData.wishlistData || {}; 
 
         // Remove item from wishlist
@@ -57,9 +59,9 @@ const removeFromWishlist = async (req, res) => {
 // Get user wishlist data
 const getUserWishlist = async (req, res) => {
     try {
-        const { userId } = req.body 
+        const userId = req.userId; // Get userId from auth middleware
 
-        const userData = await userModel.findById(userId)
+        const userData = await userModel.findById(userId);
         let wishlistData = userData.wishlistData || {}; 
 
         res.json({ success: true, wishlistData });

@@ -1,23 +1,20 @@
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
-const authUser = async (req,res,next) => {
-
-    const {token} = req.headers;
-
+const authUser = (req, res, next) => {
+    const token = req.headers.token;
+    
     if (!token) {
-        return res.json({ success: false, message: 'Unauthorized Login, Try Again.'}) 
+        return res.status(401).json({ success: false, message: 'No token provided' });
     }
 
     try {
-        const token_decode = jwt.verify(token, process.env.JWT_SECRET)
-        req.userId = token_decode.id  // Changed from req.body.userId to req.userId
-        next()
-    } 
-    catch (error) {
-        console.log(error);
-        res.json({success: false, message: error.message}) 
+        const decoded = jwt.verify(token, process.env.JWT_SECRET);
+        req.userId = decoded.id; // Set userId directly as other routes expect
+        next();
+    } catch (error) {
+        console.error('Auth error:', error);
+        return res.status(401).json({ success: false, message: 'Invalid token' });
     }
-
 }
 
 

@@ -58,14 +58,47 @@ const ProductCard = ({ product, style, className, onDragEnd }) => {
 };
 
 const Discover = () => {
-  const { backendUrl, token } = useContext(ShopContext);
+  const { backendUrl, token, navigate } = useContext(ShopContext);
   const [products, setProducts] = useState([]);
   const [originalProducts, setOriginalProducts] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [likedProducts, setLikedProducts] = useState([]);
+  const [swipedProducts, setSwipedProducts] = useState(new Set());
   const [isSwipingEnabled, setIsSwipingEnabled] = useState(true);
   const [loading, setLoading] = useState(true);
   const [likesLoading, setLikesLoading] = useState(false);
+
+  // Check for authentication
+  useEffect(() => {
+    if (!token) {
+      toast.error('Please login to access Discover feature');
+      navigate('/login');
+    }
+  }, [token, navigate]);
+
+  const addToWishlist = async (productId) => {
+    if (!token) {
+      toast.error('Please login to add to wishlist');
+      return;
+    }
+
+    try {
+      const response = await axios.post(`${backendUrl}/api/wishlist/add`, {
+        productId
+      }, {
+        headers: { token }
+      });
+
+      if (response.data.success) {
+        toast.success('Added to wishlist!');
+      } else {
+        toast.error(response.data.message || 'Failed to add to wishlist');
+      }
+    } catch (error) {
+      console.error('Error adding to wishlist:', error);
+      toast.error('Failed to add to wishlist');
+    }
+  };
 
   // Fetch products from backend
   useEffect(() => {
@@ -137,63 +170,156 @@ const Discover = () => {
     }
   };
 
-  // Initial fetch of liked products
+  // Fetch liked products on initial load and after refreshing page
   useEffect(() => {
-    if (!isSwipingEnabled && token) {
-      fetchLikedProducts();
+    const fetchInitialLikedProducts = async () => {
+      if (!token) return;
+      
+      try {
+        // First get the wishlist
+        const wishlistResponse = await axios.get('http://localhost:5173/api/wishlist/list', {
+          headers: { token }
+        });
+        
+        if (wishlistResponse.data.success && wishlistResponse.data.wishlist) {
+          // Get full product details for each wishlist item
+          const productPromises = wishlistResponse.data.wishlist.map(async (item) => {
+            try {
+              const productResponse = await axios.post('http://localhost:5173/api/product/single', {
+                productId: item.productId
+              });
+              
+              if (productResponse.data.success) {
+                return productResponse.data.product;
+              }
+              return null;
+            } catch (error) {
+              console.error('Error fetching product details:', error);
+              return null;
+            }
+          });
+
+          const products = await Promise.all(productPromises);
+          const validProducts = products.filter(product => product !== null);
+          setLikedProducts(validProducts);
+        }
+      } catch (error) {
+        console.error('Error fetching liked products:', error);
+        toast.error('Error loading your liked products');
+      }
+    };
+
+    fetchInitialLikedProducts();
+  }, [token]);
+
+  // Handle refresh stack
+  const handleRefreshStack = async () => {
+    try {
+      setLoading(true);
+      
+      // Reset all state completely
+      setSwipedProducts(new Set());
+      setLikedProducts([]);
+      setCurrentIndex(0);
+      
+      // If logged in, clear wishlist
+      if (token) {
+        try {
+          // Remove all items from wishlist one by one
+          const wishlistResponse = await axios.get('http://localhost:5173/api/wishlist/list', {
+            headers: { token }
+          });
+          
+          if (wishlistResponse.data.success && wishlistResponse.data.wishlist) {
+            const removePromises = wishlistResponse.data.wishlist.map(item => 
+              axios.delete(`http://localhost:5173/api/wishlist/remove/${item.productId}`, {
+                headers: { token }
+              })
+            );
+            await Promise.all(removePromises);
+          }
+        } catch (error) {
+          console.error('Error clearing wishlist:', error);
+        }
+      }
+
+      // Fetch fresh product list
+      try {
+        const response = await axios.get('http://localhost:5173/api/product/list');
+        if (response.data.success) {
+          const productList = response.data.products;
+          setOriginalProducts(productList);
+          setProducts(productList);
+          toast.success('Stack refreshed! Start swiping again!');
+        }
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        toast.error('Error refreshing products');
+      }
+
+      // Switch to swiping mode automatically
+      setIsSwipingEnabled(true);
+      
+    } catch (error) {
+      console.error('Error in refresh process:', error);
+      toast.error('Error refreshing stack');
+    } finally {
+      setLoading(false);
     }
-  }, [isSwipingEnabled, token, backendUrl]);
+  };
 
   // Handle swipe like/dislike
   const handleSwipe = async (direction) => {
     const currentProduct = products[currentIndex];
+    if (!currentProduct) return;
+    
+    // Check authentication for any swipe
+    if (!token) {
+      toast.error('Please login to use the Discover feature');
+      navigate('/login');
+      return;
+    }
     
     if (direction === 'right') {
-      if (!token) {
-        toast.error('Please login to like products');
-        return;
-      }
-
       try {
-        console.log('Saving liked product:', currentProduct._id);
-        // Save the liked product to MongoDB
-        const response = await axios.post(`${backendUrl}/api/swipe/like`, {
-          productId: currentProduct._id,
-          userId: token, // Add userId from token
-          tags: currentProduct.tags || []
+        // Get userId from token
+        const tokenPayload = JSON.parse(atob(token.split('.')[1]));
+        const userId = tokenPayload.id;
+
+        // Add to wishlist
+        const response = await axios.post('http://localhost:4000/api/wishlist/add', {
+          userId: userId,
+          itemId: currentProduct._id
         }, {
-          headers: { 
-            token,
-            'Content-Type': 'application/json'
-          }
+          headers: { token }
         });
-        
+
         if (response.data.success) {
-          console.log('Product liked successfully');
+          // Update local state only if backend update was successful
+          setLikedProducts(prev => {
+            // Remove if it existed before
+            const filtered = prev.filter(p => p._id !== currentProduct._id);
+            return [...filtered, currentProduct];
+          });
           toast.success('Product added to likes!');
-          // Add to local liked products immediately
-          setLikedProducts(prev => [...prev, currentProduct]);
         } else {
-          console.error('Failed to like product:', response.data.message);
-          toast.error(response.data.message || 'Failed to like product');
+          toast.error(response.data.message || 'Failed to add to wishlist');
         }
       } catch (error) {
-        console.error('Error liking product:', error.response?.data || error);
-        toast.error(error.response?.data?.message || 'Failed to like product');
-        return; // Don't proceed if like failed
+        console.error('Error adding to wishlist:', error);
+        toast.error('Failed to add product to likes');
+        return;
       }
     }
 
-    // Only remove product from stack if the like was successful (for right swipe)
-    // or if it was a left swipe
-    if (direction === 'left' || direction === 'right') {
-      const newProducts = products.filter((_, index) => index !== currentIndex);
-      setProducts(newProducts);
+    // Update products stack regardless of swipe direction
+    setProducts(prev => {
+      const newProducts = prev.filter((_, index) => index !== 0);
       if (newProducts.length === 0) {
-        // If no more products, show a message
-        toast.info('No more products to show. Stop swiping to see your likes!');
+        toast.info('No more products to show. Stop swiping to see your likes or refresh the stack!');
       }
-    }
+      return newProducts;
+    });
   };
 
   // Toggle swiping mode
@@ -202,15 +328,17 @@ const Discover = () => {
     setIsSwipingEnabled(newSwipingState);
     
     if (newSwipingState) {
-      // Restart swiping: reset the stack with all products
+      // Restart swiping mode
       setLoading(true);
       setCurrentIndex(0);
-      setProducts(originalProducts);
+      // Filter out already liked products from the stack
+      const unswipedProducts = originalProducts.filter(
+        product => !likedProducts.some(liked => liked._id === product._id)
+      );
+      setProducts(unswipedProducts);
       setLoading(false);
-    } else {
-      // Stop swiping: fetch the latest liked products from MongoDB
-      await fetchLikedProducts();
     }
+    // Keep the liked products state as is when toggling
   };
 
   const cardVariants = {
@@ -250,12 +378,31 @@ const Discover = () => {
       <div className="container mx-auto">
         <div className="flex justify-between items-center mb-8">
           <Title text1="DISCOVER" text2=" PRODUCTS" />
-          <button
-            onClick={toggleSwiping}
-            className="px-6 py-2 rounded-md bg-black text-white hover:bg-gray-800 transition-colors"
-          >
-            {isSwipingEnabled ? 'Stop Swiping' : 'Start Swiping'}
-          </button>
+          <div className="flex gap-4">
+            <button
+              onClick={handleRefreshStack}
+              disabled={loading}
+              className={`px-6 py-2 rounded-md flex items-center gap-2 ${
+                loading 
+                  ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                  : 'bg-gray-200 text-gray-800 hover:bg-gray-300'
+              } transition-colors`}
+            >
+              {loading && (
+                <div className="animate-spin rounded-full h-4 w-4 border-2 border-gray-500 border-t-transparent"></div>
+              )}
+              {loading ? 'Refreshing...' : 'Refresh Stack'}
+            </button>
+            <button
+              onClick={toggleSwiping}
+              disabled={loading}
+              className={`px-6 py-2 rounded-md bg-black text-white hover:bg-gray-800 transition-colors ${
+                loading ? 'opacity-50 cursor-not-allowed' : ''
+              }`}
+            >
+              {isSwipingEnabled ? 'Stop Swiping' : 'Start Swiping'}
+            </button>
+          </div>
         </div>
 
         {/* Swipe Cards Section */}
@@ -350,7 +497,16 @@ const Discover = () => {
                     )}
                     <div className="p-4">
                       <h3 className="text-lg font-semibold">{product.name}</h3>
-                      <p className="text-gray-600">₹{product.price}</p>
+                      <p className="text-gray-600 mb-3">₹{product.price}</p>
+                      <button 
+                        onClick={() => addToWishlist(product._id)}
+                        className="w-full py-2 bg-pink-50 text-pink-600 rounded-md hover:bg-pink-100 transition-colors flex items-center justify-center gap-2"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                        </svg>
+                        Add to Wishlist
+                      </button>
                     </div>
                   </motion.div>
                 ))}
