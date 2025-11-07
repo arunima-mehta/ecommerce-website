@@ -179,6 +179,7 @@ const ShopContextProvider = (props) => {
 
         try {
             console.log('Fetching user profile...');
+            
             const response = await axios.post(
                 `${backendUrl}/api/user/profile`, 
                 {}, 

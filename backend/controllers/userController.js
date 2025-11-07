@@ -2,6 +2,7 @@ import validator from "validator";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import userModel from "../models/userModel.js";
+import orderModel from "../models/orderModel.js";
 
 const createToken = (id) => {
     return jwt.sign({id}, process.env.JWT_SECRET)
@@ -10,7 +11,7 @@ const createToken = (id) => {
 // Route to get user profile
 const getUserProfile = async (req, res) => {
     try {
-        const { userId } = req.body;
+        const userId = req.userId; // Get userId from auth middleware
         const userData = await userModel.findById(userId).select('-password');
         res.json({success:true, userData})
     } catch (error) {
@@ -22,14 +23,17 @@ const getUserProfile = async (req, res) => {
 // Route to get user activity data for recommendations
 const getUserActivity = async (req, res) => {
     try {
-        const { userId } = req.body;
-        const userData = await userModel.findById(userId).select('cartData wishlistData orders');
+        const userId = req.userId; // Get userId from auth middleware
+        const userData = await userModel.findById(userId).select('cartData wishlistData');
         
         if (userData) {
+            // Fetch orders from orderModel
+            const userOrders = await orderModel.find({ userId }).select('items');
+            
             const activityData = {
                 cartItems: userData.cartData || {},
                 wishlistItems: userData.wishlistData || {},
-                orders: userData.orders || []
+                orders: userOrders || []
             };
             res.json({success:true, activityData});
         } else {

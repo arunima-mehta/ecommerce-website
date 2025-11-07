@@ -21,7 +21,7 @@ const Login = () => {
         if (response.data.success) {
           setToken(response.data.token)
           localStorage.setItem('token', response.data.token)
-          
+          toast.success('Account created successfully!')
         }
         else{
           toast.error(response.data.message)
@@ -32,6 +32,7 @@ const Login = () => {
         if (response.data.success) {
           setToken(response.data.token)
           localStorage.setItem('token', response.data.token)
+          toast.success('Login successful!')
         }
         else{
           toast.error(response.data.message)
@@ -39,8 +40,8 @@ const Login = () => {
         
       }
     } catch (error) {
-      console.log(error);
-      toast.error(response.data.message)
+      console.error('Login error:', error);
+      toast.error(error.response?.data?.message || 'An error occurred. Please try again.')
     }
   }
 

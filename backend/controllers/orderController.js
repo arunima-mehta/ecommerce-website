@@ -31,7 +31,8 @@ const razorpayInstance = new razorpay({
 const placeOrder = async (req,res) => {
     try {
 
-        const {userId, items, amount, address} = req.body;
+        const { items, amount, address } = req.body;
+        const userId = req.userId; // Get userId from auth middleware
 
         const orderData = {
             userId, 
@@ -74,7 +75,8 @@ const placeOrder = async (req,res) => {
 const placeOrderStripe = async (req,res) => {
     try {
         
-        const {userId, items, amount, address} = req.body;
+        const { items, amount, address } = req.body;
+        const userId = req.userId; // Get userId from auth middleware
         const { origin } = req.headers;
         const orderData = {
             userId, 
@@ -130,7 +132,8 @@ const placeOrderStripe = async (req,res) => {
 //verify stripe
 
 const verifyStripe = async(req, res) =>{
-     const { orderId, success, userId } = req.body
+     const { orderId, success } = req.body;
+     const userId = req.userId; // Get userId from auth middleware
      console.log('🔍 Stripe verification request:', { orderId, success, userId });
 
      try {
@@ -177,7 +180,8 @@ const verifyStripe = async(req, res) =>{
 const placeOrderRazorpay = async (req,res) => {
     try {
         
-        const {userId, items, amount, address} = req.body;
+        const { items, amount, address } = req.body;
+        const userId = req.userId; // Get userId from auth middleware
         
         const orderData = {
             userId, 
@@ -215,7 +219,8 @@ const placeOrderRazorpay = async (req,res) => {
 const  verifyRazorpay = async (req,res) => {
     try {
         
-        const { userId, razorpay_order_id} = req.body
+        const { razorpay_order_id } = req.body;
+        const userId = req.userId; // Get userId from auth middleware
 
         const orderInfo = await razorpayInstance.orders.fetch(razorpay_order_id)
 
@@ -263,7 +268,7 @@ const allOrders = async (req,res) => {
 //User order data for Frontend
 const userOrders = async (req,res) => {
     try {
-        const { userId } =req.body
+        const userId = req.userId; // Get userId from auth middleware
         const orders = await orderModel.find({userId})
         res.json({success:true,orders})
     } catch (error) {

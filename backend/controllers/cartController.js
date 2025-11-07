@@ -6,7 +6,8 @@ const addToCart = async (req,res) => {
 
     try {
 
-        const {userId, itemId, size } = req.body
+        const { itemId, size } = req.body;
+        const userId = req.userId; // Get userId from auth middleware
         console.log('Cart add request:', { userId, itemId, size });
 
         const userData = await userModel.findById(userId)
@@ -54,7 +55,8 @@ const addToCart = async (req,res) => {
 const updateCart = async (req,res) => {
     try {
 
-        const {userId, itemId, size, quantity} = req.body
+        const { itemId, size, quantity } = req.body;
+        const userId = req.userId; // Get userId from auth middleware
 
         const userData = await userModel.findById(userId)
         let cartData = await userData.cartData; 
@@ -77,7 +79,7 @@ const getUserCart = async (req,res) => {
 
     try {
 
-        const {userId} = req.body 
+        const userId = req.userId; // Get userId from auth middleware
         console.log('📦 Getting cart for user:', userId);
 
         const userData = await userModel.findById(userId)

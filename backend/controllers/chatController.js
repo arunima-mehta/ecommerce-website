@@ -112,12 +112,9 @@ export const processQuery = async (req, res) => {
   try {
     const { query } = req.body;
     const userId = req.userId; // Get userId from auth middleware
-    
-    console.log('Processing query for userId:', userId); // Debug log
 
     // Verify user exists in database
     if (!userId) {
-      console.log('No userId found in request'); // Debug log
       return res.status(401).json({ 
         success: false, 
         message: "Authentication required" 
@@ -125,7 +122,6 @@ export const processQuery = async (req, res) => {
     }
 
     const user = await userModel.findById(userId);
-    console.log('Found user:', user ? 'yes' : 'no'); // Debug log
     
     if (!user) {
       return res.status(404).json({ 

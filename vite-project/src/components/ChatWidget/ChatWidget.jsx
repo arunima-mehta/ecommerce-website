@@ -11,11 +11,6 @@ const ChatWidget = () => {
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef(null);
   const { token, backendUrl } = useContext(ShopContext);
-  
-  // Debug log when token changes
-  useEffect(() => {
-    console.log('Current token:', token);
-  }, [token]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -60,8 +55,6 @@ const ChatWidget = () => {
     setInputValue('');
 
     try {
-      console.log('Sending request with token:', token); // Debug log
-      
       // Send to backend for processing
       const response = await axios.post(`${backendUrl}/api/chat/query`, {
         query: inputValue
