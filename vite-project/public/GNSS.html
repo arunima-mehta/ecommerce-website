@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GNSS Delivery Simulation - India</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .container {
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        
+        header {
+            background: linear-gradient(135deg, #1a5276, #3498db);
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        
+        .main-content {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+        }
+        
+        .control-panel {
+            width: 350px;
+            background: white;
+            padding: 1.5rem;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .map-container {
+            flex: 1;
+            position: relative;
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .panel-section {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .panel-section:last-child {
+            border-bottom: none;
+        }
+        
+        h2 {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+        }
+        
+        h2 i {
+            margin-right: 0.5rem;
+            color: #3498db;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #555;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+            transition: border 0.3s;
+        }
+        
+        select:focus, input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: background 0.3s;
+            width: 100%;
+            margin-top: 0.5rem;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+        }
+        
+        .btn-secondary {
+            background: #95a5a6;
+        }
+        
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+        
+        .btn-success {
+            background: #2ecc71;
+        }
+        
+        .btn-success:hover {
+            background: #27ae60;
+        }
+        
+        .btn-warning {
+            background: #f39c12;
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        .simulation-status {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-top: 1rem;
+        }
+        
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+        
+        .status-label {
+            font-weight: 500;
+        }
+        
+        .status-value {
+            color: #3498db;
+        }
+        
+        .vehicle-icon {
+            width: 30px;
+            height: 30px;
+            background: #e74c3c;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .warehouse-icon {
+            width: 25px;
+            height: 25px;
+            background: #3498db;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .destination-icon {
+            width: 25px;
+            height: 25px;
+            background: #2ecc71;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        
+        .route-line {
+            stroke: #3498db;
+            stroke-width: 5;
+            stroke-dasharray: 10;
+            animation: dash 1s linear infinite;
+        }
+        
+        @keyframes dash {
+            to {
+                stroke-dashoffset: -20;
+            }
+        }
+        
+        .control-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        
+        .control-buttons .btn {
+            flex: 1;
+            margin-top: 0;
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 1rem 1.5rem;
+            background: #2ecc71;
+            color: white;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            z-index: 10000;
+            transform: translateX(150%);
+            transition: transform 0.3s ease;
+        }
+        
+        .notification.show {
+            transform: translateX(0);
+        }
+        
+        .notification.error {
+            background: #e74c3c;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: #ecf0f1;
+            border-radius: 3px;
+            margin-top: 0.5rem;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: #2ecc71;
+            width: 0%;
+            transition: width 0.5s;
+        }
+        
+        .map-mode-info {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .address-display {
+            background: #f8f9fa;
+            padding: 0.75rem;
+            border-radius: 4px;
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            border-left: 3px solid #3498db;
+        }
+        
+        .search-results {
+            position: absolute;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            max-height: 200px;
+            overflow-y: auto;
+            width: calc(100% - 3rem);
+            z-index: 1001;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .search-result-item {
+            padding: 0.75rem;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .search-result-item:hover {
+            background: #f5f7fa;
+        }
+        
+        .search-result-item:last-child {
+            border-bottom: none;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .control-panel {
+                width: 100%;
+                height: 40%;
+            }
+            
+            .map-container {
+                height: 60%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>GNSS Delivery Simulation - India</h1>
+                <div class="user-info">Administrator</div>
+            </div>
+        </header>
+        
+        <div class="main-content">
+            <div class="control-panel">
+                <div class="panel-section">
+                    <h2>Warehouse Selection</h2>
+                    <div class="form-group">
+                        <label for="warehouse-select">Select Warehouse</label>
+                        <select id="warehouse-select">
+                            <option value="">-- Select a warehouse --</option>
+                            <option value="28.6139,77.2090">Delhi Logistics Hub</option>
+                            <option value="19.0760,72.8777">Mumbai Distribution Center</option>
+                            <option value="13.0827,80.2707">Chennai Supply Depot</option>
+                            <option value="12.9716,77.5946">Bangalore Fulfillment Center</option>
+                            <option value="22.5726,88.3639">Kolkata Storage Facility</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h2>Delivery Information</h2>
+                    <div class="form-group">
+                        <label for="delivery-address">Search Delivery Address</label>
+                        <input type="text" id="delivery-address" placeholder="Enter destination address in India">
+                        <div id="search-results" class="search-results hidden"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Or Place Destination on Map</label>
+                        <button id="enable-map-selection" class="btn btn-warning">Click to Place on Map</button>
+                        <div id="map-mode-info" class="map-mode-info hidden">
+                            Click anywhere on the map to set the delivery destination
+                        </div>
+                    </div>
+                    
+                    <div id="address-display" class="address-display hidden">
+                        <strong>Selected Address:</strong>
+                        <div id="selected-address">-</div>
+                    </div>
+                    
+                    <button id="set-destination" class="btn">Set Destination</button>
+                </div>
+                
+                <div class="panel-section">
+                    <h2>Simulation Controls</h2>
+                    <div class="control-buttons">
+                        <button id="start-simulation" class="btn btn-success">Start Delivery</button>
+                        <button id="pause-simulation" class="btn btn-secondary">Pause</button>
+                        <button id="reset-simulation" class="btn btn-secondary">Reset</button>
+                    </div>
+                    <div class="progress-bar">
+                        <div id="simulation-progress" class="progress"></div>
+                    </div>
+                </div>
+                
+                <div class="panel-section">
+                    <h2>Delivery Status</h2>
+                    <div class="simulation-status">
+                        <div class="status-item">
+                            <span class="status-label">Vehicle Status:</span>
+                            <span id="vehicle-status" class="status-value">Ready</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Current Location:</span>
+                            <span id="current-location" class="status-value">-</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Distance Traveled:</span>
+                            <span id="distance-traveled" class="status-value">0 km</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Estimated Time:</span>
+                            <span id="estimated-time" class="status-value">-</span>
+                        </div>
+                        <div class="status-item">
+                            <span class="status-label">Route Instructions:</span>
+                            <span id="route-instructions" class="status-value">-</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="notification" class="notification"></div>
+
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+    <script>
+        // Initialize the map centered on India
+        const map = L.map('map').setView([20.5937, 78.9629], 5);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Application state
+        const state = {
+            warehouses: [
+                { id: 1, name: "Delhi Logistics Hub", coords: [28.6139, 77.2090] },
+                { id: 2, name: "Mumbai Distribution Center", coords: [19.0760, 72.8777] },
+                { id: 3, name: "Chennai Supply Depot", coords: [13.0827, 80.2707] },
+                { id: 4, name: "Bangalore Fulfillment Center", coords: [12.9716, 77.5946] },
+                { id: 5, name: "Kolkata Storage Facility", coords: [22.5726, 88.3639] }
+            ],
+            selectedWarehouse: null,
+            destination: null,
+            vehiclePosition: null,
+            route: null,
+            routeInstructions: [],
+            isSimulationRunning: false,
+            simulationInterval: null,
+            currentStep: 0,
+            totalSteps: 0,
+            routingControl: null,
+            mapSelectionMode: false
+        };
+        
+        // Map markers and layers
+        const markers = {
+            warehouse: null,
+            destination: null,
+            vehicle: null
+        };
+        
+        const layers = {
+            route: null
+        };
+        
+        // DOM elements
+        const elements = {
+            warehouseSelect: document.getElementById('warehouse-select'),
+            deliveryAddress: document.getElementById('delivery-address'),
+            searchResults: document.getElementById('search-results'),
+            enableMapSelection: document.getElementById('enable-map-selection'),
+            mapModeInfo: document.getElementById('map-mode-info'),
+            addressDisplay: document.getElementById('address-display'),
+            selectedAddress: document.getElementById('selected-address'),
+            setDestination: document.getElementById('set-destination'),
+            startSimulation: document.getElementById('start-simulation'),
+            pauseSimulation: document.getElementById('pause-simulation'),
+            resetSimulation: document.getElementById('reset-simulation'),
+            vehicleStatus: document.getElementById('vehicle-status'),
+            currentLocation: document.getElementById('current-location'),
+            distanceTraveled: document.getElementById('distance-traveled'),
+            estimatedTime: document.getElementById('estimated-time'),
+            routeInstructions: document.getElementById('route-instructions'),
+            notification: document.getElementById('notification'),
+            simulationProgress: document.getElementById('simulation-progress')
+        };
+        
+        // Get or generate destination from URL or sessionStorage
+        function getOrGenerateDestination() {
+            const params = new URLSearchParams(window.location.search);
+            const urlDestination = params.get('destination');
+            
+            if (urlDestination) {
+                // Parse destination from URL
+                const [lat, lng] = urlDestination.split(',').map(Number);
+                return { coords: [lat, lng], address: `Delivery Location (${lat.toFixed(4)}, ${lng.toFixed(4)})` };
+            }
+            
+            // Check if destination is already stored in sessionStorage
+            const storedDestination = sessionStorage.getItem('deliveryDestination');
+            if (storedDestination) {
+                return JSON.parse(storedDestination);
+            }
+            
+            // Generate random destination within India
+            const indianBounds = {
+                minLat: 8.4,
+                maxLat: 35.8,
+                minLng: 68.7,
+                maxLng: 97.25
+            };
+            
+            const randomLat = indianBounds.minLat + Math.random() * (indianBounds.maxLat - indianBounds.minLat);
+            const randomLng = indianBounds.minLng + Math.random() * (indianBounds.maxLng - indianBounds.minLng);
+            
+            const destination = {
+                coords: [randomLat, randomLng],
+                address: `Random Delivery Location (${randomLat.toFixed(4)}, ${randomLng.toFixed(4)})`
+            };
+            
+            // Store in sessionStorage for consistency during this session
+            sessionStorage.setItem('deliveryDestination', JSON.stringify(destination));
+            
+            return destination;
+        }
+        
+        // Initialize the application
+        function init() {
+            // Set destination from URL or generate random one
+            state.destination = getOrGenerateDestination();
+            
+            // Update destination marker and address display
+            if (state.destination) {
+                updateDestinationMarker();
+                elements.selectedAddress.textContent = state.destination.address;
+                elements.addressDisplay.classList.remove('hidden');
+                elements.deliveryAddress.value = state.destination.address;
+            }
+            
+            // Auto-select first warehouse if not already selected
+            if (!state.selectedWarehouse && state.warehouses.length > 0) {
+                const firstWarehouse = state.warehouses[0];
+                state.selectedWarehouse = { coords: firstWarehouse.coords };
+                elements.warehouseSelect.value = `${firstWarehouse.coords[0]},${firstWarehouse.coords[1]}`;
+                
+                if (markers.warehouse) {
+                    map.removeLayer(markers.warehouse);
+                }
+                markers.warehouse = L.marker(firstWarehouse.coords)
+                    .bindPopup(`<b>${firstWarehouse.name}</b>`)
+                    .addTo(map);
+            }
+            
+            // Add warehouse markers to the map
+            state.warehouses.forEach(warehouse => {
+                L.marker(warehouse.coords)
+                    .bindPopup(`<b>${warehouse.name}</b>`)
+                    .addTo(map);
+            });
+            
+            // Automatically calculate route
+            if (state.selectedWarehouse && state.destination) {
+                calculateRoute();
+            }
+            
+            // Event listeners
+            elements.warehouseSelect.addEventListener('change', handleWarehouseSelect);
+            elements.deliveryAddress.addEventListener('input', handleAddressSearch);
+            elements.enableMapSelection.addEventListener('click', enableMapSelection);
+            elements.setDestination.addEventListener('click', handleSetDestination);
+            elements.startSimulation.addEventListener('click', startSimulation);
+            elements.pauseSimulation.addEventListener('click', pauseSimulation);
+            elements.resetSimulation.addEventListener('click', resetSimulation);
+            
+            // Map click event for manual selection
+            map.on('click', handleMapClick);
+            
+            // Close search results when clicking elsewhere
+            document.addEventListener('click', (e) => {
+                if (!elements.deliveryAddress.contains(e.target) && !elements.searchResults.contains(e.target)) {
+                    elements.searchResults.classList.add('hidden');
+                }
+            });
+            
+            // Auto-start simulation after a short delay
+            setTimeout(() => {
+                startSimulation();
+            }, 1000);
+        }
+        
+        // Handle warehouse selection
+        function handleWarehouseSelect() {
+            const selectedValue = elements.warehouseSelect.value;
+            if (!selectedValue) {
+                state.selectedWarehouse = null;
+                if (markers.warehouse) {
+                    map.removeLayer(markers.warehouse);
+                    markers.warehouse = null;
+                }
+                return;
+            }
+            
+            const [lat, lng] = selectedValue.split(',').map(Number);
+            state.selectedWarehouse = { coords: [lat, lng] };
+            
+            // Update warehouse marker on map
+            if (markers.warehouse) {
+                map.removeLayer(markers.warehouse);
+            }
+            
+            markers.warehouse = L.marker([lat, lng])
+                .bindPopup('<b>Selected Warehouse</b>')
+                .addTo(map);
+            
+            // Center map on selected warehouse
+            map.setView([lat, lng], 10);
+            
+            showNotification('Warehouse selected successfully');
+        }
+        
+        // Handle address search input
+        function handleAddressSearch() {
+            const query = elements.deliveryAddress.value.trim();
+            if (query.length < 3) {
+                elements.searchResults.classList.add('hidden');
+                return;
+            }
+            
+            // Use OpenStreetMap Nominatim for geocoding
+            searchAddress(query);
+        }
+        
+        // Search address using Nominatim
+        function searchAddress(query) {
+            const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query + ', India')}&limit=5`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    displaySearchResults(data);
+                })
+                .catch(error => {
+                    console.error('Error searching address:', error);
+                    showNotification('Error searching address', true);
+                });
+        }
+        
+        // Display search results
+        function displaySearchResults(results) {
+            elements.searchResults.innerHTML = '';
+            
+            if (results.length === 0) {
+                elements.searchResults.classList.add('hidden');
+                return;
+            }
+            
+            results.forEach(result => {
+                const item = document.createElement('div');
+                item.className = 'search-result-item';
+                item.textContent = result.display_name;
+                item.addEventListener('click', () => {
+                    selectAddressFromSearch(result);
+                });
+                elements.searchResults.appendChild(item);
+            });
+            
+            elements.searchResults.classList.remove('hidden');
+        }
+        
+        // Select address from search results
+        function selectAddressFromSearch(result) {
+            elements.deliveryAddress.value = result.display_name;
+            elements.searchResults.classList.add('hidden');
+            
+            // Set destination coordinates
+            state.destination = {
+                coords: [parseFloat(result.lat), parseFloat(result.lon)],
+                address: result.display_name
+            };
+            
+            // Update destination marker on map
+            updateDestinationMarker();
+            
+            // Display selected address
+            elements.selectedAddress.textContent = result.display_name;
+            elements.addressDisplay.classList.remove('hidden');
+            
+            // Center map on selected location
+            map.setView([result.lat, result.lon], 13);
+            
+            showNotification('Address selected from search');
+        }
+        
+        // Enable manual map selection mode
+        function enableMapSelection() {
+            state.mapSelectionMode = true;
+            elements.mapModeInfo.classList.remove('hidden');
+            elements.enableMapSelection.textContent = 'Click on Map to Place';
+            elements.enableMapSelection.classList.add('btn-success');
+            
+            showNotification('Click anywhere on the map to set destination');
+        }
+        
+        // Handle map click for manual selection
+        function handleMapClick(e) {
+            if (!state.mapSelectionMode) return;
+            
+            const { lat, lng } = e.latlng;
+            
+            // Reverse geocode to get address
+            reverseGeocode(lat, lng);
+            
+            // Set destination coordinates
+            state.destination = {
+                coords: [lat, lng],
+                address: '' // Will be set after reverse geocoding
+            };
+            
+            // Update destination marker
+            updateDestinationMarker();
+            
+            // Disable map selection mode
+            state.mapSelectionMode = false;
+            elements.mapModeInfo.classList.add('hidden');
+            elements.enableMapSelection.textContent = 'Click to Place on Map';
+            elements.enableMapSelection.classList.remove('btn-success');
+        }
+        
+        // Reverse geocode coordinates to get address
+        function reverseGeocode(lat, lng) {
+            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`;
+            
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const address = data.display_name || 'Address not found';
+                    
+                    // Update destination address
+                    state.destination.address = address;
+                    
+                    // Update address display
+                    elements.selectedAddress.textContent = address;
+                    elements.addressDisplay.classList.remove('hidden');
+                    
+                    // Update search field
+                    elements.deliveryAddress.value = address;
+                    
+                    showNotification('Destination set on map');
+                })
+                .catch(error => {
+                    console.error('Error reverse geocoding:', error);
+                    showNotification('Error getting address for location', true);
+                });
+        }
+        
+        // Update destination marker on map
+        function updateDestinationMarker() {
+            if (!state.destination) return;
+            
+            // Remove existing destination marker
+            if (markers.destination) {
+                map.removeLayer(markers.destination);
+            }
+            
+            // Add new destination marker
+            markers.destination = L.marker(state.destination.coords)
+                .bindPopup(`<b>Delivery Destination</b><br>${state.destination.address}`)
+                .addTo(map);
+        }
+        
+        // Handle destination setting
+        function handleSetDestination() {
+            if (!state.destination) {
+                showNotification('Please set a destination first', true);
+                return;
+            }
+            
+            if (!state.selectedWarehouse) {
+                showNotification('Please select a warehouse first', true);
+                return;
+            }
+            
+            // Calculate route using road network
+            calculateRoute();
+            
+            showNotification('Destination set successfully');
+        }
+        
+        // Calculate route between warehouse and destination using road network
+        function calculateRoute() {
+            if (!state.selectedWarehouse || !state.destination) return;
+            
+            // Remove existing routing control
+            if (state.routingControl) {
+                map.removeControl(state.routingControl);
+            }
+            
+            // Use Leaflet Routing Machine to calculate road route
+            state.routingControl = L.Routing.control({
+                waypoints: [
+                    L.latLng(state.selectedWarehouse.coords[0], state.selectedWarehouse.coords[1]),
+                    L.latLng(state.destination.coords[0], state.destination.coords[1])
+                ],
+                routeWhileDragging: false,
+                showAlternatives: false,
+                lineOptions: {
+                    styles: [{color: '#3498db', opacity: 0.7, weight: 5}]
+                },
+                createMarker: function() { return null; } // Don't create default markers
+            }).addTo(map);
+            
+            // When route is calculated, extract the coordinates
+            state.routingControl.on('routesfound', function(e) {
+                const routes = e.routes;
+                if (routes && routes.length > 0) {
+                    const route = routes[0];
+                    
+                    // Extract coordinates from the route
+                    state.route = [];
+                    route.coordinates.forEach(coord => {
+                        state.route.push([coord.lat, coord.lng]);
+                    });
+                    
+                    // Extract instructions
+                    state.routeInstructions = [];
+                    route.instructions.forEach(instruction => {
+                        state.routeInstructions.push(instruction.text);
+                    });
+                    
+                    state.totalSteps = state.route.length;
+                    state.currentStep = 0;
+                    
+                    // Calculate estimated distance and time
+                    const distance = (route.summary.totalDistance / 1000).toFixed(2);
+                    const time = Math.round(route.summary.totalTime / 60);
+                    
+                    elements.distanceTraveled.textContent = '0 km';
+                    elements.estimatedTime.textContent = `${time} minutes`;
+                    elements.routeInstructions.textContent = state.routeInstructions[0] || 'Follow the route';
+                    
+                    showNotification('Route calculated successfully');
+                }
+            });
+        }
+        
+        // Start the delivery simulation
+        function startSimulation() {
+            if (!state.route || state.route.length === 0) {
+                showNotification('Please set a destination first', true);
+                return;
+            }
+            
+            if (state.isSimulationRunning) return;
+            
+            state.isSimulationRunning = true;
+            elements.vehicleStatus.textContent = 'In Transit';
+            elements.startSimulation.disabled = true;
+            
+            // Initialize vehicle position at warehouse
+            state.vehiclePosition = state.route[0];
+            
+            // Add vehicle marker to map
+            if (markers.vehicle) {
+                map.removeLayer(markers.vehicle);
+            }
+            
+            markers.vehicle = L.marker(state.vehiclePosition, {
+                icon: L.divIcon({
+                    className: 'vehicle-icon',
+                    html: '🚚',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15]
+                })
+            }).addTo(map);
+            
+            // Start simulation interval
+            state.simulationInterval = setInterval(updateSimulation, 200);
+            
+            showNotification('Delivery simulation started');
+        }
+        
+        // Update the simulation state
+        function updateSimulation() {
+            if (state.currentStep >= state.totalSteps - 1) {
+                // Simulation complete
+                completeSimulation();
+                return;
+            }
+            
+            // Move to next step
+            state.currentStep++;
+            state.vehiclePosition = state.route[state.currentStep];
+            
+            // Update vehicle marker position
+            markers.vehicle.setLatLng(state.vehiclePosition);
+            
+            // Update progress bar
+            const progress = (state.currentStep / state.totalSteps) * 100;
+            elements.simulationProgress.style.width = `${progress}%`;
+            
+            // Update status information
+            const distance = (state.currentStep / state.totalSteps) * 
+                (state.routingControl.getPlan().routes[0].summary.totalDistance / 1000);
+            elements.distanceTraveled.textContent = `${distance.toFixed(2)} km`;
+            
+            // Update current location (in a real app, you would reverse geocode)
+            elements.currentLocation.textContent = 
+                `${state.vehiclePosition[0].toFixed(4)}, ${state.vehiclePosition[1].toFixed(4)}`;
+            
+            // Update route instructions periodically
+            if (state.currentStep % 50 === 0 && state.routeInstructions.length > 0) {
+                const instructionIndex = Math.min(
+                    Math.floor(state.currentStep / state.totalSteps * state.routeInstructions.length),
+                    state.routeInstructions.length - 1
+                );
+                elements.routeInstructions.textContent = state.routeInstructions[instructionIndex];
+            }
+            
+            // Pan map to follow vehicle (optional)
+            // map.panTo(state.vehiclePosition);
+        }
+        
+        // Complete the simulation
+        function completeSimulation() {
+            clearInterval(state.simulationInterval);
+            state.isSimulationRunning = false;
+            elements.vehicleStatus.textContent = 'Delivery Complete';
+            elements.startSimulation.disabled = false;
+            elements.simulationProgress.style.width = '100%';
+            elements.routeInstructions.textContent = 'You have reached your destination';
+            
+            showNotification('Package delivered successfully!');
+        }
+        
+        // Pause the simulation
+        function pauseSimulation() {
+            if (!state.isSimulationRunning) return;
+            
+            clearInterval(state.simulationInterval);
+            state.isSimulationRunning = false;
+            elements.vehicleStatus.textContent = 'Paused';
+            elements.startSimulation.disabled = false;
+            
+            showNotification('Simulation paused');
+        }
+        
+        // Reset the simulation
+        function resetSimulation() {
+            clearInterval(state.simulationInterval);
+            state.isSimulationRunning = false;
+            state.currentStep = 0;
+            state.vehiclePosition = null;
+            
+            // Remove vehicle marker
+            if (markers.vehicle) {
+                map.removeLayer(markers.vehicle);
+                markers.vehicle = null;
+            }
+            
+            // Reset status information
+            elements.vehicleStatus.textContent = 'Ready';
+            elements.currentLocation.textContent = '-';
+            elements.distanceTraveled.textContent = '0 km';
+            elements.routeInstructions.textContent = '-';
+            elements.startSimulation.disabled = false;
+            elements.simulationProgress.style.width = '0%';
+            
+            showNotification('Simulation reset');
+        }
+        
+        // Show notification
+        function showNotification(message, isError = false) {
+            elements.notification.textContent = message;
+            elements.notification.className = 'notification';
+            
+            if (isError) {
+                elements.notification.classList.add('error');
+            }
+            
+            elements.notification.classList.add('show');
+            
+            setTimeout(() => {
+                elements.notification.classList.remove('show');
+            }, 3000);
+        }
+        
+        // Initialize the application when the DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
