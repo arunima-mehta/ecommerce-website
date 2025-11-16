@@ -17,5 +17,20 @@ const authUser = (req, res, next) => {
     }
 }
 
+// Optional auth - doesn't fail if no token, just sets userId if token exists
+export const optionalAuth = (req, res, next) => {
+    const token = req.headers.token;
+    
+    if (token) {
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            req.userId = decoded.id; // Set userId if token is valid
+        } catch (error) {
+            // Invalid token, but we continue anyway for optional auth
+            console.log('Optional auth: Invalid token, continuing without userId');
+        }
+    }
+    next(); // Always proceed, regardless of token
+}
 
 export default authUser

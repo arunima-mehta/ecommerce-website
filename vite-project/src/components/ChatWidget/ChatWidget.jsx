@@ -9,6 +9,7 @@ const ChatWidget = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
+  const [sessionId] = useState(() => `session-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
   const messagesEndRef = useRef(null);
   const { token, backendUrl } = useContext(ShopContext);
 
@@ -22,32 +23,24 @@ const ChatWidget = () => {
 
   // Load chat history from localStorage when component mounts
   useEffect(() => {
-    if (token) {
-      const savedMessages = localStorage.getItem(`chat_history_${token}`);
-      if (savedMessages) {
-        setMessages(JSON.parse(savedMessages));
-      }
+    const storageKey = token ? `chat_history_${token}` : `chat_history_${sessionId}`;
+    const savedMessages = localStorage.getItem(storageKey);
+    if (savedMessages) {
+      setMessages(JSON.parse(savedMessages));
     }
-  }, [token]);
+  }, [token, sessionId]);
 
   // Save messages to localStorage whenever they change
   useEffect(() => {
-    if (token && messages.length > 0) {
-      localStorage.setItem(`chat_history_${token}`, JSON.stringify(messages));
+    if (messages.length > 0) {
+      const storageKey = token ? `chat_history_${token}` : `chat_history_${sessionId}`;
+      localStorage.setItem(storageKey, JSON.stringify(messages));
     }
-  }, [messages, token]);
+  }, [messages, token, sessionId]);
 
   const handleSendMessage = async (e) => {
     e.preventDefault();
     if (!inputValue.trim()) return;
-
-    // Check if user is logged in
-    if (!token) {
-      const errorMessage = { type: 'bot', content: 'Please log in to use the chat feature.' };
-      setMessages(prev => [...prev, { type: 'user', content: inputValue }, errorMessage]);
-      setInputValue('');
-      return;
-    }
 
     // Add user message
     const userMessage = { type: 'user', content: inputValue };
@@ -55,15 +48,22 @@ const ChatWidget = () => {
     setInputValue('');
 
     try {
-      // Send to backend for processing
-      const response = await axios.post(`${backendUrl}/api/chat/query`, {
-        query: inputValue
-      }, {
-        headers: { 
-          token: token,  // Using the same header format as your other API calls
-          'Content-Type': 'application/json'
-        }
-      });
+      // Send to backend for processing (works with or without token)
+      const requestBody = {
+        query: inputValue,
+        sessionId: sessionId  // Add sessionId for non-authenticated users
+      };
+
+      const headers = {
+        'Content-Type': 'application/json'
+      };
+
+      // Add token if user is logged in
+      if (token) {
+        headers.token = token;
+      }
+
+      const response = await axios.post(`${backendUrl}/api/chat/query`, requestBody, { headers });
 
       // Add bot response
       const botMessage = { type: 'bot', content: response.data.message };

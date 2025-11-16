@@ -1,9 +1,10 @@
 import express from 'express';
 import { processQuery } from '../controllers/chatController.js';
-import auth from '../middleware/auth.js';
+import { optionalAuth } from '../middleware/auth.js';
 
 const chatRouter = express.Router();
 
-chatRouter.post('/query', auth, processQuery);
+// Use optionalAuth instead of auth - allows both authenticated and guest users
+chatRouter.post('/query', optionalAuth, processQuery);
 
 export default chatRouter;

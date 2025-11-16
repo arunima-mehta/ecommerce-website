@@ -196,22 +196,13 @@ const ShopContextProvider = (props) => {
                 setUserEmail(response.data.userData.email);
                 // Load user wishlist from database
                 getUserWishlist(token);
-            } else {
-                console.error('User profile fetch failed:', response.data);
-                if (!response.data.success) {
-                    throw new Error(response.data.message || 'Failed to fetch user profile');
-                }
             }
         } 
         catch (error) {
-            console.error('Error fetching user profile:', error.response?.data || error.message);
-            if (error.response?.status === 401) {
-                console.log('Token invalid, logging out user');
-                logout();
-            } else {
-                // Only try to get wishlist if it's not an auth error
-                getUserWishlist(token);
-            }
+            console.log('Note: User profile not available, continuing with limited features');
+            // Silently fail - user can still use most features without profile
+            // Still try to get wishlist data
+            getUserWishlist(token);
         }
     }
 
