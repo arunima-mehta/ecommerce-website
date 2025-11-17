@@ -512,49 +512,20 @@
             simulationProgress: document.getElementById('simulation-progress')
         };
         
-        // Get or generate destination from URL or sessionStorage
-        function getOrGenerateDestination() {
-            const params = new URLSearchParams(window.location.search);
-            const urlDestination = params.get('destination');
-            
-            if (urlDestination) {
-                // Parse destination from URL
-                const [lat, lng] = urlDestination.split(',').map(Number);
-                return { coords: [lat, lng], address: `Delivery Location (${lat.toFixed(4)}, ${lng.toFixed(4)})` };
-            }
-            
-            // Check if destination is already stored in sessionStorage
-            const storedDestination = sessionStorage.getItem('deliveryDestination');
-            if (storedDestination) {
-                return JSON.parse(storedDestination);
-            }
-            
-            // Generate random destination within India
-            const indianBounds = {
-                minLat: 8.4,
-                maxLat: 35.8,
-                minLng: 68.7,
-                maxLng: 97.25
-            };
-            
-            const randomLat = indianBounds.minLat + Math.random() * (indianBounds.maxLat - indianBounds.minLat);
-            const randomLng = indianBounds.minLng + Math.random() * (indianBounds.maxLng - indianBounds.minLng);
-            
+        // Get fixed destination for RV Institute of Technology and Management, Bengaluru
+        function getFixedDestination() {
             const destination = {
-                coords: [randomLat, randomLng],
-                address: `Random Delivery Location (${randomLat.toFixed(4)}, ${randomLng.toFixed(4)})`
+                coords: [12.8761, 77.5847], // RV Institute of Technology and Management, Bengaluru
+                address: "RV Institute of Technology and Management, 4th Cross, Brookes Haven Layout, Kothnur, Bengaluru South City Corporation, Bengaluru, Bangalore South, Bengaluru Urban, Karnataka, 560076, India"
             };
-            
-            // Store in sessionStorage for consistency during this session
-            sessionStorage.setItem('deliveryDestination', JSON.stringify(destination));
             
             return destination;
         }
         
         // Initialize the application
         function init() {
-            // Set destination from URL or generate random one
-            state.destination = getOrGenerateDestination();
+            // Set destination to fixed address
+            state.destination = getFixedDestination();
             
             // Update destination marker and address display
             if (state.destination) {
@@ -900,8 +871,8 @@
                 })
             }).addTo(map);
             
-            // Start simulation interval
-            state.simulationInterval = setInterval(updateSimulation, 200);
+            // Start simulation interval (ultra fast - ~1ms per step)
+            state.simulationInterval = setInterval(updateSimulation, 1);
             
             showNotification('Delivery simulation started');
         }
@@ -914,8 +885,11 @@
                 return;
             }
             
-            // Move to next step
-            state.currentStep++;
+            // Move multiple steps per iteration (3x speed boost)
+            state.currentStep += 3;
+            if (state.currentStep >= state.totalSteps) {
+                state.currentStep = state.totalSteps - 1;
+            }
             state.vehiclePosition = state.route[state.currentStep];
             
             // Update vehicle marker position
