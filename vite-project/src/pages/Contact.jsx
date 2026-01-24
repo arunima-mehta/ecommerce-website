@@ -63,7 +63,7 @@ export default function Contact() {
               <div>
                 <h2 className="text-3xl font-medium mb-6">REACH OUT TO US</h2>
                 <p className="text-gray-600 dark:text-gray-300 mb-12">
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Our dedicated team is ready to assist you.
+                  Have a question about our collections, your order, or anything in between? Our team is here to provide thoughtful support and a seamless experience, every step of the way.
                 </p>
 
                 <div className="space-y-8">
@@ -78,9 +78,9 @@ export default function Contact() {
                         </div>
                         <div>
                           <h3 className="text-xl font-medium mb-2 text-gray-900 dark:text-white">Visit Our Showroom</h3>
-                          <p className="text-gray-600 dark:text-gray-300">123 Luxury Avenue</p>
-                          <p className="text-gray-600 dark:text-gray-300">Fashion District, NY 10001</p>
-                          <p className="text-gray-600 dark:text-gray-300">United States</p>
+                          <p className="text-gray-600 dark:text-gray-300">123 Church St.</p>
+                          <p className="text-gray-600 dark:text-gray-300">Bengaluru 560001, Karnataka</p>
+                          <p className="text-gray-600 dark:text-gray-300">India</p>
                           <a href="#" className="text-gray-900 dark:text-white font-medium hover:underline mt-3 inline-flex items-center gap-2">
                             Get Directions →
                           </a>
@@ -99,10 +99,10 @@ export default function Contact() {
                         </div>
                         <div>
                           <h3 className="text-xl font-medium mb-2 text-gray-900 dark:text-white">Call Us</h3>
-                          <p className="text-gray-600 dark:text-gray-300">+1 (555) 123-4567</p>
-                          <p className="text-gray-600 dark:text-gray-300">Mon-Fri: 9AM-7PM EST</p>
-                          <p className="text-gray-600 dark:text-gray-300">Sat-Sun: 10AM-6PM EST</p>
-                          <a href="tel:+1-555-123-4567" className="text-gray-900 dark:text-white font-medium hover:underline mt-3 inline-flex items-center gap-2">
+                          <p className="text-gray-600 dark:text-gray-300">+91 555-123-4567</p>
+                          <p className="text-gray-600 dark:text-gray-300">Mon-Fri: 9AM-7PM IST</p>
+                          <p className="text-gray-600 dark:text-gray-300">Sat-Sun: 10AM-6PM IST</p>
+                          <a href="tel:+91-555-123-4567" className="text-gray-900 dark:text-white font-medium hover:underline mt-3 inline-flex items-center gap-2">
                             Call Now →
                           </a>
                         </div>
@@ -120,10 +120,10 @@ export default function Contact() {
                         </div>
                         <div>
                           <h3 className="text-xl font-medium mb-2 text-gray-900 dark:text-white">Email Support</h3>
-                          <p className="text-gray-600 dark:text-gray-300">support@luxe.com</p>
+                          <p className="text-gray-600 dark:text-gray-300">support@aureline.com</p>
                           <p className="text-gray-600 dark:text-gray-300">Response within 24 hours</p>
                           <p className="text-gray-600 dark:text-gray-300">Multilingual support</p>
-                          <a href="mailto:support@luxe.com" className="text-gray-900 dark:text-white font-medium hover:underline mt-3 inline-flex items-center gap-2">
+                          <a href="mailto:support@aureline.com" className="text-gray-900 dark:text-white font-medium hover:underline mt-3 inline-flex items-center gap-2">
                             Send Email →
                           </a>
                         </div>
@@ -203,7 +203,7 @@ export default function Contact() {
             <div className="text-center">
               <h2 className="text-4xl font-medium mb-4 text-gray-900 dark:text-white">JOIN OUR TEAM</h2>
               <p className="text-gray-600 dark:text-gray-300 max-w-3xl mx-auto mb-16">
-                Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Be part of a team that's redefining luxury fashion for the modern world.
+                We’re always looking for individuals who value design, precision, and purpose. Explore opportunities to grow with Auréline.
               </p>
             </div>
 
@@ -277,7 +277,7 @@ export default function Contact() {
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           </svg>
-                          New York, NY
+                          Bengaluru, KA
                         </span>
                         <span className="flex items-center gap-1.5">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -292,7 +292,7 @@ export default function Contact() {
                     </button>
                   </div>
                   <p className="text-neutral-600 dark:text-gray-300 mb-6">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Lead our design team in creating cutting-edge luxury fashion pieces.
+                    Lead the creative direction of our collections, shaping refined silhouettes and elevated designs that define modern luxury.
                   </p>
                   <div>
                     <h4 className="font-medium mb-3 text-black dark:text-white">REQUIREMENTS:</h4>
@@ -337,7 +337,7 @@ export default function Contact() {
                     </button>
                   </div>
                   <p className="text-neutral-600 dark:text-gray-300 mb-6">
-                    Sed do eiusmod tempor incididunt ut labore. Drive our digital presence and customer engagement strategies.
+                    Shape Auréline’s digital voice through thoughtful strategy, refined storytelling, and meaningful customer engagement.
                   </p>
                   <div>
                     <h4 className="font-medium mb-3 text-black dark:text-white">REQUIREMENTS:</h4>
@@ -367,7 +367,7 @@ export default function Contact() {
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           </svg>
-                          Los Angeles, CA
+                          Mumbai, MH
                         </span>
                         <span className="flex items-center gap-1.5">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -382,7 +382,7 @@ export default function Contact() {
                     </button>
                   </div>
                   <p className="text-neutral-600 dark:text-gray-300 mb-6">
-                    Ut labore et dolore magna aliqua. Provide exceptional service to our luxury clientele.
+                    Deliver a seamless and personalized experience, reflecting the care, precision, and standards of a luxury brand.
                   </p>
                   <div>
                     <h4 className="font-medium mb-3 text-black dark:text-white">REQUIREMENTS:</h4>
@@ -412,7 +412,7 @@ export default function Contact() {
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                           </svg>
-                          Chicago, IL
+                          Chennai, TN
                         </span>
                         <span className="flex items-center gap-1.5">
                           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -427,7 +427,7 @@ export default function Contact() {
                     </button>
                   </div>
                   <p className="text-neutral-600 dark:text-gray-300 mb-6">
-                    Duis aute irure dolor in reprehenderit. Optimize our global supply chain for efficiency and sustainability.
+                    Oversee and optimize our supply chain operations with a focus on efficiency, transparency, and responsible sourcing.
                   </p>
                   <div>
                     <h4 className="font-medium mb-3 text-black dark:text-white">REQUIREMENTS:</h4>

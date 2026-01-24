@@ -25,7 +25,7 @@ const Footer = () => {
               />
             </div>
             <p className="w-full md:w-2/3 text-gray-600 dark:text-gray-300 leading-relaxed">
-              lorem ipsum dolor.
+              Modern luxury, redefined.
             </p>
           </div>
 
@@ -72,7 +72,7 @@ const Footer = () => {
       {/* Bottom Section */}
       <div className="border-t border-gray-300 dark:border-gray-600 w-full">
         <p className="py-6 text-sm text-center text-gray-600 dark:text-gray-300">
-          © 2025 aureline.com - All Rights Reserved.
+          © 2026 aureline.com - All Rights Reserved.
         </p>
       </div>
     </footer>

@@ -69,7 +69,7 @@ export default function About() {
         >
           <h2 className="text-4xl md:text-5xl mb-4 tracking-wider text-neutral-900 dark:text-white">OUR VALUES</h2>
           <p className="text-xl text-neutral-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim
+            The principles that guide our design philosophy, our craftsmanship, and every experience we create.
           </p>
         </motion.div>
 
@@ -112,7 +112,7 @@ export default function About() {
           >
             <h2 className="text-4xl md:text-5xl mb-4 tracking-wider text-neutral-900 dark:text-white">MEET OUR TEAM</h2>
             <p className="text-xl text-neutral-600 dark:text-gray-300 max-w-2xl mx-auto">
-              Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium
+              A collective of designers, creators, and specialists united by a shared commitment to modern luxury.
             </p>
           </motion.div>
 
@@ -151,7 +151,7 @@ export default function About() {
           {[
             { number: '1M+', label: 'Happy Customers' },
             { number: '50+', label: 'Countries Served' },
-            { number: '5000+', label: 'Luxury Items' },
+            { number: '500+', label: 'Luxury Items' },
             { number: '99%', label: 'Satisfaction Rate' }
           ].map((stat, index) => (
             <motion.div
@@ -180,7 +180,7 @@ export default function About() {
         >
           <h2 className="text-4xl md:text-5xl mb-6 tracking-wider">JOIN OUR JOURNEY</h2>
           <p className="text-xl text-neutral-300 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
-            Totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo
+            Discover thoughtfully designed collections and connect with a brand shaped by craftsmanship, intention, and modern expression.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <motion.button

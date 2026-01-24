@@ -7,8 +7,8 @@ import { Icons } from "./icons"
 export function Testimonials({
   testimonials,
   className,
-  title = "Read what people are saying",
-  description = "Dummy feedback from virtual customers using our component library.",
+  title = "What our clients say",
+  description = "Thoughts from clients who value design, quality, and everyday wearability.",
   maxDisplayed = 6,
 }) {
   const [showAll, setShowAll] = useState(false)
@@ -69,12 +69,12 @@ export function Testimonials({
                     {testimonial.text}
                   </p>
                 </div>
-                <button
+                {/* <button
                   onClick={() => openInNewTab(testimonial.social)}
                   className="absolute top-6 right-6 text-gray-400 dark:text-gray-500 hover:text-gray-500 dark:hover:text-gray-400 transition-colors"
                 >
                   <Icons.twitter className="h-5 w-5" aria-hidden="true" />
-                </button>
+                </button>*/}
               </Card>
             ))}
         </div>

@@ -52,50 +52,49 @@ const BentoGrid = () => {
   const items = [
     {
       title: "Premium Collection",
-      description: "Experience luxury in every step with our finest crafted footwear.",
+      description: "Elevated carry essentials defined by clean form, thoughtful structure, and everyday practicality.",
       backgroundImage: "/src/assets/assets/new_frontend_assets/bag6.jpg",
       className: "col-span-1 xl:col-span-2 row-span-1 min-h-[300px] xl:min-h-[400px]",
     },
     {
       title: "Casual Comfort",
-      description: "Everyday essentials designed for ultimate comfort.",
+      description: "Relaxed headwear designed for ease, balance, and effortless everyday wear.",
       backgroundImage: "/src/assets/assets/new_frontend_assets/grid2.jpg",
       className: "col-span-1 row-span-1 min-h-[300px]",
     },
     {
-      title: "Sport Series",
-      description: "Performance footwear for your active lifestyle.",
+      title: "Modern Eyewear",
+      description: "Balancing protection, precision, and modern edge.",
       backgroundImage: "/src/assets/assets/new_frontend_assets/grid5.jpg",
       className: "col-span-1 row-span-1 min-h-[300px] xl:min-h-[250px]",
     },
     {
-      title: "Limited Edition",
-      description: "Exclusive designs for the fashion-forward.",
+      title: "Limited Edition Fragrances",
+      description: "A signature range of fragrances defined by character, presence, and a refined sense of identity.",
       backgroundImage: "/src/assets/assets/new_frontend_assets/grid4.jpg",
       className: "col-span-1 xl:col-span-2 row-span-1 min-h-[300px] xl:min-h-[350px]",
     },
     {
       title: "Seasonal Collection",
-      description: "The perfect footwear for every season.",
+      description: "Versatile silhouettes designed to evolve with the season, offering comfort and refined movement.",
       backgroundImage: "/src/assets/assets/new_frontend_assets/grid6.jpg",
       className: "col-span-1 row-span-2 min-h-[600px] xl:min-h-[700px]",
     },
     {
       title: "Designer Series",
-      description: "Artistically crafted for the distinguished taste.",
+      description: "Statement pieces defined by texture, proportion, and considered design language.",
       backgroundImage: "/src/assets/assets/new_frontend_assets/grid7.jpg",
       className: "col-span-1 row-span-2 min-h-[600px] xl:min-h-[700px]",
     },
-    // ✅ Added missing two boxes
     {
       title: "Artisan Craftsmanship",
-      description: "Every piece is handcrafted by skilled artisans who take pride in their work.",
+      description: "Hand-finished pieces shaped by detail, tradition, and quiet expression.",
         backgroundImage: "/src/assets/assets/new_frontend_assets/grid3.jpg",
       className: "col-span-1 row-span-1 min-h-[300px] xl:min-h-[340px]",
     },
     {
       title: "Exclusive Drop",
-      description: "Unique designs available for a limited time only.",
+      description: "Limited-run footwear designed with precision, character, and modern utility.",
       backgroundImage: "/src/assets/assets/new_frontend_assets/grid8.jpg",
       className: "col-span-1 row-span-1 min-h-[300px] xl:min-h-[340px]",
     },
@@ -114,7 +113,7 @@ const BentoGrid = () => {
             Featured Collections
           </h1>
           <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
-            Explore our carefully curated selection of premium footwear designed for style and comfort.
+            Explore our carefully curated selection of contemporary pieces, designed with comfort, quality, and intention.
           </p>
         </motion.div>
 

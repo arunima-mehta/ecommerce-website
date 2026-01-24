@@ -90,14 +90,13 @@ const ExampleContent = ({ title }) => (
     <h2 className="col-span-1 text-3xl font-bold md:col-span-4 text-gray-900 dark:text-white">{title}</h2>
     <div className="col-span-1 md:col-span-8">
       <p className="mb-4 text-xl text-gray-600 dark:text-gray-300 md:text-2xl">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi,
-        blanditiis soluta eius quam modi aliquam quaerat odit deleniti minima
-        maiores voluptate est ut saepe accusantium maxime doloremque nulla
-        consectetur possimus.
+        Our collections are designed with a focus on versatility, comfort, and considered detail. 
+        Each piece is thoughtfully crafted to move effortlessly between environments, 
+        without compromising on structure or refinement.
       </p>
       <p className="mb-8 text-xl text-gray-600 dark:text-gray-300 md:text-2xl">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusantium
-        reiciendis blanditiis aliquam aut fugit sint.
+        From tailored outerwear to everyday essentials, we balance form and function to create garments that feel natural to wear, 
+        whether navigating the city or stepping away from it.
       </p>
       <button className="w-full rounded bg-gray-900 dark:bg-white px-9 py-4 text-xl text-white dark:text-black transition-colors hover:bg-gray-700 dark:hover:bg-gray-200 md:w-fit">
         Learn more <FiArrowUpRight className="inline" />
@@ -111,24 +110,24 @@ export const TextParallaxContentExample = () => {
     <div className="bg-white dark:bg-gray-950">
       <TextParallaxContent
         imgUrl="/src/assets/assets/new_frontend_assets/par_trendy.jpg"
-        subheading="LOREM"
-        heading="Built for all of us."
+        subheading="Inclusive"
+        heading="Designed for everyone."
       >
-        <ExampleContent title="Fashion-forward comfort for every occasion" />
+        <ExampleContent title="Refined comfort, designed for every setting" />
       </TextParallaxContent>
 
       <TextParallaxContent
         imgUrl="/src/assets/assets/new_frontend_assets/par_comfort.jpg"
-        subheading="IPSUM"
-        heading="Never compromise."
+        subheading="Sustainable"
+        heading="Designed with intention."
       >
         <ExampleContent title="Sustainability meets style" />
       </TextParallaxContent>
 
       <TextParallaxContent
         imgUrl="/src/assets/assets/new_frontend_assets/par_sustainable.jpg"
-        subheading="Modern"
-        heading="Dress for the best."
+        subheading="Timeless"
+        heading="Elegance for modern living."
       >
         <ExampleContent title="Timeless elegance for modern living" />
       </TextParallaxContent>

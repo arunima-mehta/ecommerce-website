@@ -4,33 +4,33 @@ import styles from './Hero.module.css';
 const sliderData = [
   {
     image: '/src/assets/assets/new_frontend_assets/hero1.jpg',
-    subtitle: "design",
-    title: "Slider 01",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, neque? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum, ex."
+    //subtitle: "design",
+    title: "Adaptive Essentials",
+    description: "Thoughtfully tailored pieces made to adapt, wherever the day takes you."
   },
   {
     image: '/src/assets/assets/new_frontend_assets/hero2.jpg',
-    subtitle: "design",
-    title: "Slider 02",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, neque? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum, ex."
+    //subtitle: "design",
+    title: "Urban Velocity",
+    description: "Fluid materials anchored by structure, made for motion in metropolitan spaces."
   },
   {
     image: '/src/assets/assets/new_frontend_assets/hero3.jpg',
-    subtitle: "design",
-    title: "Slider 03",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, neque? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum, ex."
+    //subtitle: "design",
+    title: "Quiet Authority",
+    description: "Restrained silhouettes with decisive form, expressing authority through simplicity."
   },
   {
     image: '/src/assets/assets/new_frontend_assets/hero4.jpg',
-    subtitle: "design",
-    title: "Slider 04",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, neque? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum, ex."
+    //subtitle: "design",
+    title: "In Motion",
+    description: "Relaxed proportions shaped by intent, \n created for rhythm, movement, and pause."
   },
   {
     image: '/src/assets/assets/new_frontend_assets/hero5.jpg',
-    subtitle: "design",
-    title: "Slider 05",
-    description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore, neque? Lorem ipsum dolor sit amet consectetur adipisicing elit. Ipsum, ex."
+    //subtitle: "design",
+    title: "Modern Lineage",
+    description: "Tailoring shaped by continuity, bridging tradition and modern form."
   }
 ];
 
@@ -52,7 +52,7 @@ const Hero = () => {
           <div key={index} className={`${styles.item} ${index === activeIndex ? styles.active : ''}`}>
             <img src={slide.image} alt={slide.title} />
             <div className={styles.content}>
-              <p>{slide.subtitle}</p>
+              {/* <p>{slide.subtitle}</p> */}
               <h2>{slide.title}</h2>
               <p>{slide.description}</p>
             </div>
@@ -73,7 +73,7 @@ const Hero = () => {
             onClick={() => setActiveIndex(index)}
           >
             <img src={slide.image} alt={slide.title} />
-            <div className={styles.thumbnailContent}>Name Slider</div>
+            <div className={styles.thumbnailContent}></div>
           </div>
         ))}
       </div>

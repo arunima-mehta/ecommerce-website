@@ -213,7 +213,7 @@ const ForYou = () => {
             {personalizedProducts.length > 0 && (
                 <div className="mb-16">
                     <div className="flex items-center justify-between mb-8">
-                        <Title text1={'RECOMMENDED'} text2={'FOR YOU'} />
+                        <Title text1={'RECOMMENDED'} text2={' FOR YOU'} />
                         <div className="text-sm text-gray-500 dark:text-gray-400">
                             Based on your activity
                         </div>
@@ -264,7 +264,7 @@ const ForYou = () => {
             {token && (
                 <div className="mb-16">
                     <div className="flex items-center justify-between mb-8">
-                        <Title text1={'YOUR'} text2={'ACTIVITY'} />
+                        <Title text1={'YOUR'} text2={' ACTIVITY'} />
                         <div className="text-sm text-gray-500 dark:text-gray-400">
                             Wishlist • Cart • Orders
                         </div>
