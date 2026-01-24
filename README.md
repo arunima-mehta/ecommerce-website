@@ -25,3 +25,8 @@ A full-stack e-commerce website (MERN) featuring personalized recommendations, c
 - Payment Gateways: Razorpay, Stripe
 - Cloud Storage: Cloudinary
 - Email: Nodemailer
+
+## Live Deployments
+
+- User-end: https://aureline.vercel.app/
+- Admin-panel: https://aureline-admin.vercel.app/
