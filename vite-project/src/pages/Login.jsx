@@ -68,9 +68,9 @@ const Login = () => {
         {/* Left Card - Membership Benefits */}
         <div className='flex-1 bg-white dark:bg-black rounded-2xl border border-gray-200 dark:border-gray-800 p-8 shadow-2xl shadow-gray-300/40 dark:shadow-black/60 transform hover:scale-[1.02] transition-all duration-300'>
           <div>
-            <h2 className='text-2xl font-bold mb-4 text-gray-900 dark:text-white'>LOREM IPSUM DOLOR</h2>
+            <h2 className='text-2xl font-bold mb-4 text-gray-900 dark:text-white'>Create an account with us!</h2>
             <p className='text-gray-600 dark:text-gray-300 mb-6 text-sm'>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam.
+              Sign up to manage your orders, revisit saved items, and access features available to registered customers.
             </p>
             
             <div className='space-y-3'>
@@ -86,10 +86,9 @@ const Login = () => {
             </div>
             
             <div className='mt-6 p-4 rounded-lg border border-gray-100 dark:border-gray-800 bg-gray-100 dark:bg-gray-900'>
-              <p className='text-xs italic text-gray-900 dark:text-white'>
-                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Ut enim ad minim veniam, quis nostrud exercitation."
+              <p className='text-xs text-gray-900 dark:text-white'>
+                🛈 Signing in allows us to keep your orders, preferences, and delivery details in one place. Your details are kept private and used only to manage your account and orders.
               </p>
-              <p className='text-xs mt-2 text-gray-900 dark:text-white'>— Lorem D., VIP Member</p>
             </div>
           </div>
         </div>
