@@ -39,19 +39,19 @@ export default function About() {
     {
       name: 'Simran Kaur',
       role: 'Founder & Creative Director',
-      image: '/src/assets/assets/new_frontend_assets/about_pfp.png',
+      image: '/new_frontend_assets/about_pfp.png',
       bio: 'Former Vogue editor with 15 years of experience in high-end fashion and luxury brand development.'
     },
     {
       name: 'Anjali Menon',
       role: 'Head of Design',
-      image: '/src/assets/assets/new_frontend_assets/about_pfp.png',
+      image: '/new_frontend_assets/about_pfp.png',
       bio: 'Graduate of Parsons School of Design with expertise in contemporary fashion.'
     },
     {
       name: 'Tanya Malhotra',
       role: 'Sustainability Director',
-      image: '/src/assets/assets/new_frontend_assets/about_pfp.png',
+      image: '/new_frontend_assets/about_pfp.png',
       bio: 'Leading our mission towards ethical and sustainable luxury fashion practices.'
     }
   ];

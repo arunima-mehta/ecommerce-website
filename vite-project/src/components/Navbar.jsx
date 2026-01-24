@@ -29,7 +29,7 @@ const Navbar = () => {
       <header className={`${styles.header} text-black dark:text-white`}>
         <Link to='/' className={`${styles.logo} text-black dark:text-white flex items-center`}>
           <img 
-            src="/src/assets/assets/new_frontend_assets/aur_logo_new.png" 
+            src="/new_frontend_assets/aur_logo_new.png" 
             alt="AURÉLINE Logo" 
             className="w-auto object-contain"
             style={logoStyle}

@@ -109,7 +109,7 @@ export const TextParallaxContentExample = () => {
   return (
     <div className="bg-white dark:bg-gray-950">
       <TextParallaxContent
-        imgUrl="/src/assets/assets/new_frontend_assets/par_trendy.jpg"
+        imgUrl="/new_frontend_assets/par_trendy.jpg"
         subheading="Inclusive"
         heading="Designed for everyone."
       >
@@ -117,7 +117,7 @@ export const TextParallaxContentExample = () => {
       </TextParallaxContent>
 
       <TextParallaxContent
-        imgUrl="/src/assets/assets/new_frontend_assets/par_comfort.jpg"
+        imgUrl="/new_frontend_assets/par_comfort.jpg"
         subheading="Sustainable"
         heading="Designed with intention."
       >
@@ -125,7 +125,7 @@ export const TextParallaxContentExample = () => {
       </TextParallaxContent>
 
       <TextParallaxContent
-        imgUrl="/src/assets/assets/new_frontend_assets/par_sustainable.jpg"
+        imgUrl="/new_frontend_assets/par_sustainable.jpg"
         subheading="Timeless"
         heading="Elegance for modern living."
       >

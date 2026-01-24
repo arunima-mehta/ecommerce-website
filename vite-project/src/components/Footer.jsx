@@ -19,7 +19,7 @@ const Footer = () => {
           <div>
             <div className="mb-5 flex items-center">
               <img 
-                src="/src/assets/assets/new_frontend_assets/aur_logo_new.png" 
+                src="/new_frontend_assets/aur_logo_new.png" 
                 alt="AURÉLINE Logo" 
                 className="h-12 sm:h-14 md:h-16 lg:h-20 w-auto object-contain"
               />

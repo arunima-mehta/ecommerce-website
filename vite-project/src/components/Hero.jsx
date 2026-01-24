@@ -3,31 +3,31 @@ import styles from './Hero.module.css';
 
 const sliderData = [
   {
-    image: '/src/assets/assets/new_frontend_assets/hero1.jpg',
+    image: '/new_frontend_assets/hero1.jpg',
     //subtitle: "design",
     title: "Adaptive Essentials",
     description: "Thoughtfully tailored pieces made to adapt, wherever the day takes you."
   },
   {
-    image: '/src/assets/assets/new_frontend_assets/hero2.jpg',
+    image: '/new_frontend_assets/hero2.jpg',
     //subtitle: "design",
     title: "Urban Velocity",
     description: "Fluid materials anchored by structure, made for motion in metropolitan spaces."
   },
   {
-    image: '/src/assets/assets/new_frontend_assets/hero3.jpg',
+    image: '/new_frontend_assets/hero3.jpg',
     //subtitle: "design",
     title: "Quiet Authority",
     description: "Restrained silhouettes with decisive form, expressing authority through simplicity."
   },
   {
-    image: '/src/assets/assets/new_frontend_assets/hero4.jpg',
+    image: '/new_frontend_assets/hero4.jpg',
     //subtitle: "design",
     title: "In Motion",
     description: "Relaxed proportions shaped by intent, \n created for rhythm, movement, and pause."
   },
   {
-    image: '/src/assets/assets/new_frontend_assets/hero5.jpg',
+    image: '/new_frontend_assets/hero5.jpg',
     //subtitle: "design",
     title: "Modern Lineage",
     description: "Tailoring shaped by continuity, bridging tradition and modern form."
